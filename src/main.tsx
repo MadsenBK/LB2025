@@ -17,6 +17,7 @@ import OrgStaffDashboard from "./pages/dashboard/os_dashboard";
 import SysAdminDashboard from "./pages/dashboard/sa_dashboard";
 import OrganizationSetup from "./pages/organization/organizationSetup";
 import SetupError from "./pages/organization/setupError";
+import ClientsPage from "./pages/dashboard/clients"
 
 import "./dist/output.css";
 
@@ -80,7 +81,16 @@ function App() {
                      <OrgStaffDashboard />
                      </ProtectedRoute>
             }
+          />  
+
+          <Route
+            path="/clients"
+            element={<ProtectedRoute action="manage" subject="client">
+                     <ClientsPage />
+                     </ProtectedRoute>
+            }
           />
+
         </Routes>
       </Layout>
     </AbilityProvider>

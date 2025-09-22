@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useAuth } from "../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { Button } from "../../components/ui/button";
+import { Input } from "../../components/ui/input";
 import { LogIn } from "lucide-react";
 import { handleUserRedirect } from "../../lib/redirects";
 
@@ -16,7 +17,6 @@ export default function LoginPage() {
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // ✅ Perform the login attempt and get the complete user object from the return
     const { error: loginError, user: loggedInUser } = await login(email, password);
 
     if (loginError) {
@@ -25,10 +25,8 @@ export default function LoginPage() {
     }
 
     if (loggedInUser) {
-      // ✅ The user object here is guaranteed to be complete
       await handleUserRedirect(loggedInUser, navigate);
     } else {
-      // This should ideally never be reached if login was successful
       setError("An unknown error occurred during login.");
     }
   };
@@ -38,24 +36,20 @@ export default function LoginPage() {
       <div className="w-full max-w-md rounded-xl">
         <h1 className="text-2xl font-bold mb-8">Login</h1>
         <form onSubmit={handleLogin} className="flex flex-col gap-6">
-          <div>
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="Email"
-              className="w-full px-3 py-2 border rounded block bg-blue-50 text-black"
-            />
-          </div>
-          <div>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="Password"
-              className="w-full px-3 py-2 border rounded block bg-white text-black"
-            />
-          </div>
+          <Input
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="Email"
+            className="bg-blue-50 text-black"
+          />
+          <Input
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="Password"
+            className="bg-white text-black"
+          />
           <div className="flex justify-center pt-6">
             <Button
               type="submit"

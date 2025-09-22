@@ -80,9 +80,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       
       const loggedInUser = await fetchUser(); // ✅ Wait for the user data to be fully fetched
       return { error: null, user: loggedInUser }; // ✅ Return the full user object
-    } catch (err) {
+    } catch (err: any) {
       console.error("Login error:", err);
-      return { error: "Unknown error" };
+      return { error: err.message || "Unknown error" };
     }
   };
 

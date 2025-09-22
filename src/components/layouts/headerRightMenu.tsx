@@ -17,7 +17,7 @@ export default function Navbar() {
                     </div>
             ) : (
                     <div className="flex flex-row space-x-5">
-                        <a href="/login" className="inline-block py-3 px-6 rounded-lg font-bold 
+                        <a href="/register" className="inline-block py-3 px-6 rounded-lg font-bold 
                             transition duration-300 ease-in-out 
                             bg-yellow-600 text-white 
                             hover:bg-[#E8B83D] hover:text-[#1A2434]">

@@ -1,8 +1,6 @@
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
-import { supabase } from "../../lib/supabaseClient";
 import '../../dist/output.css';
+import { useDashboardData } from "../../lib/useDashboardData";
 import LoginBtn from '../../components/layouts/login_btn';
 import WelcomeMessage from "../../components/dashboard/WelcomeMessage";
 
@@ -11,70 +9,9 @@ import { Button } from "../../components/ui/button";
 import { Input } from "../../components/ui/input";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
 
-
-type ProfileNameOnly = {
-  first_name: string;
-};
-
-type OrgMemberOrgRow = {
-  organization_id: string;
-  organizations: {
-    company_name: string;
-  } | null;
-};
-
-
 const Dashboard = () => {
   const { user } = useAuth();
-  const navigate = useNavigate();
-  const [organizationName, setOrganizationName] = useState<string>("");
-  const [firstName, setFirstName] = useState<string>("");
-
-  useEffect(() => {
-    const fetchUserProfile = async () => {
-      if (!user) return;
-
-      // Fetch profile (first name)
-      const { data: profileData, error: profileError } = await supabase
-        .from("profiles")
-        .select("first_name")
-        .eq("id", user.id)
-        .single() as { data: ProfileNameOnly | null, error: any };
-
-        
-
-      if (profileError) {
-        console.error("Error fetching profile:", profileError.message);
-      } else {
-        setFirstName(profileData?.first_name || "User");
-      }
-
-      // Fetch org membership
-      const { data: orgData, error: orgError } = await supabase
-        .from("organization_members")
-        .select("organization_id, organizations(company_name)")
-        .eq("profile_id", user.id)
-        .maybeSingle() as { data: OrgMemberOrgRow, error: any };
-
-      if (orgError) {
-        console.error("Error fetching organization:", orgError.message);
-        return;
-      }
-
-      if (user.role === "org_admin" && !orgData) {
-        // Safety net → redirect if no org
-        navigate("/organization-setup", { replace: true });
-        return;
-      } else if (user.role === "org_staff" && !orgData) {
-        navigate("/contactorgadmin", { replace: true });
-        return;
-      }
-
-      setOrganizationName(orgData.organizations?.company_name || "Unknown Organization");
-    };
-
-    fetchUserProfile();
-  }, [user, navigate]);
+  const { firstName, organizationName, loading, error } = useDashboardData();
 
   if (!user) {
     return (
@@ -83,6 +20,14 @@ const Dashboard = () => {
         <LoginBtn />
       </div>
     );
+  }
+
+  if (loading) {
+    return <p className="text-center mt-10">Loading dashboard...</p>;
+  }
+
+  if (error) {
+    return <p className="text-center mt-10 text-red-500">Error: {error}</p>;
   }
 
   const data = [

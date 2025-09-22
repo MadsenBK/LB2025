@@ -13,8 +13,7 @@ export default function Header() {
   <div className="flex flex-col justify-end items-center h-full w-full">
     <div className="flex fkex-row space-x-8 font-body text-xl text-white">
       <a href="/" className="hover:text-gray-400">Home</a>
-      <a href="/register" className="hover:text-gray-400">Register</a>
-      <a href="/login" className="hover:text-gray-400">Login</a>
+      <a href="/oa_dashboard" className="hover:text-gray-400">Dashboard</a>
     </div>
   </div>
 
